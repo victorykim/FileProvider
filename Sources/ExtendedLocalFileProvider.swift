@@ -401,7 +401,7 @@ public struct LocalFileInformationGenerator {
             dic = audioprops.prop
             keys = audioprops.keys
             dic.removeValue(forKey: "Duration")
-            if let index = keys.index(of: "Duration") {
+            if let index = keys.firstIndex(of: "Duration") {
                 keys.remove(at: index)
             }
         }

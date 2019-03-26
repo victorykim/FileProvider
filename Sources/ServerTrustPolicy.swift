@@ -48,7 +48,7 @@ public enum ServerTrustPolicy {
     /// Evaluates whether the server trust is valid.
     ///
     /// - returns: Whether the server trust is valid.
-    public func evaluate() -> Bool {
+    func evaluate() -> Bool {
         var serverTrustIsValid = false
         
         switch self {
@@ -67,7 +67,7 @@ public enum ServerTrustPolicy {
     /// - parameter host:        The host of the challenge protection space.
     ///
     /// - returns: Whether the server trust is valid.
-    public func evaluate(_ serverTrust: SecTrust, forHost host: String) -> Bool {
+    func evaluate(_ serverTrust: SecTrust, forHost host: String) -> Bool {
         var serverTrustIsValid = false
         
         switch self {

@@ -10,13 +10,13 @@ import Foundation
 
 public extension Array where Element: FileObject {
     /// Returns a sorted array of `FileObject`s by criterias set in attributes.
-    public func sort(by type: FileObjectSorting.SortType, ascending: Bool = true, isDirectoriesFirst: Bool = false) -> [Element] {
+    func sort(by type: FileObjectSorting.SortType, ascending: Bool = true, isDirectoriesFirst: Bool = false) -> [Element] {
         let sorting = FileObjectSorting(type: type, ascending: ascending, isDirectoriesFirst: isDirectoriesFirst)
         return sorting.sort(self) as! [Element]
     }
     
     /// Sorts array of `FileObject`s by criterias set in attributes.
-    public mutating func sorted(by type: FileObjectSorting.SortType, ascending: Bool = true, isDirectoriesFirst: Bool = false) {
+    mutating func sorted(by type: FileObjectSorting.SortType, ascending: Bool = true, isDirectoriesFirst: Bool = false) {
         self = self.sort(by: type, ascending: ascending, isDirectoriesFirst: isDirectoriesFirst)
     }
 }
@@ -30,7 +30,7 @@ public extension Sequence where Iterator.Element == UInt8 {
 
 public extension URLFileResourceType {
     /// **FileProvider** returns corresponding `URLFileResourceType` of a `FileAttributeType` value
-    public init(fileTypeValue: FileAttributeType) {
+    init(fileTypeValue: FileAttributeType) {
         switch fileTypeValue {
         case FileAttributeType.typeCharacterSpecial: self = .characterSpecial
         case FileAttributeType.typeDirectory: self = .directory
@@ -72,24 +72,24 @@ extension URLError {
 
 public extension URLResourceKey {
     /// **FileProvider** returns url of file object.
-    public static let fileURLKey = URLResourceKey(rawValue: "NSURLFileURLKey")
+    static let fileURLKey = URLResourceKey(rawValue: "NSURLFileURLKey")
     /// **FileProvider** returns modification date of file in server
-    public static let serverDateKey = URLResourceKey(rawValue: "NSURLServerDateKey")
+    static let serverDateKey = URLResourceKey(rawValue: "NSURLServerDateKey")
     /// **FileProvider** returns HTTP ETag string of remote resource
-    public static let entryTagKey = URLResourceKey(rawValue: "NSURLEntryTagKey")
+    static let entryTagKey = URLResourceKey(rawValue: "NSURLEntryTagKey")
     /// **FileProvider** returns MIME type of file, if returned by server
-    public static let mimeTypeKey = URLResourceKey(rawValue: "NSURLMIMETypeIdentifierKey")
+    static let mimeTypeKey = URLResourceKey(rawValue: "NSURLMIMETypeIdentifierKey")
     /// **FileProvider** returns either file is encrypted or not
-    public static let isEncryptedKey = URLResourceKey(rawValue: "NSURLIsEncryptedKey")
+    static let isEncryptedKey = URLResourceKey(rawValue: "NSURLIsEncryptedKey")
     /// **FileProvider** count of items in directory
-    public static let childrensCount = URLResourceKey(rawValue: "MFPURLChildrensCount")
+    static let childrensCount = URLResourceKey(rawValue: "MFPURLChildrensCount")
 }
 
 public extension ProgressUserInfoKey {
     /// **FileProvider** returns associated `FileProviderOperationType`
-    public static let fileProvderOperationTypeKey = ProgressUserInfoKey("MFPOperationTypeKey")
+    static let fileProvderOperationTypeKey = ProgressUserInfoKey("MFPOperationTypeKey")
     /// **FileProvider** returns start date/time of operation
-    public static let startingTimeKey = ProgressUserInfoKey("NSProgressStartingTimeKey")
+    static let startingTimeKey = ProgressUserInfoKey("NSProgressStartingTimeKey")
 }
 
 internal extension URL {
@@ -119,7 +119,7 @@ internal extension URL {
 
 public extension URLRequest {
     /// Defines HTTP Authentication method required to access
-    public enum AuthenticationType {
+    enum AuthenticationType {
         /// Basic method for authentication
         case basic
         /// Digest method for authentication
@@ -400,7 +400,7 @@ internal extension CharacterSet {
 }
 
 internal extension Data {
-    internal var isPDF: Bool {
+    var isPDF: Bool {
         return self.count > 4 && self.scanString(length: 4, using: .ascii) == "%PDF"
     }
     
@@ -468,7 +468,7 @@ internal extension String {
 }
 
 internal extension NSNumber {
-    internal func format(precision: Int = 2, style: NumberFormatter.Style = .decimal) -> String {
+    func format(precision: Int = 2, style: NumberFormatter.Style = .decimal) -> String {
         let formatter = NumberFormatter()
         formatter.maximumFractionDigits = precision
         formatter.numberStyle = style
@@ -477,25 +477,25 @@ internal extension NSNumber {
 }
 
 internal extension String {
-    internal var pathExtension: String {
+    var pathExtension: String {
         return (self as NSString).pathExtension
     }
     
-    internal func appendingPathComponent(_ pathComponent: String) -> String {
+    func appendingPathComponent(_ pathComponent: String) -> String {
         return (self as NSString).appendingPathComponent(pathComponent)
     }
     
-    internal var lastPathComponent: String {
+    var lastPathComponent: String {
         return (self as NSString).lastPathComponent
     }
     
-    internal var deletingLastPathComponent: String {
+    var deletingLastPathComponent: String {
         return (self as NSString).deletingLastPathComponent
     }
 }
 
 internal extension TimeInterval {
-    internal var formatshort: String {
+    var formatshort: String {
         var result = "0:00"
         if self < TimeInterval(Int32.max) {
             result = ""
@@ -522,7 +522,7 @@ internal extension TimeInterval {
 
 public extension Date {
     /// Date formats used commonly in internet messaging defined by various RFCs.
-    public enum RFCStandards: String {
+    enum RFCStandards: String {
         /// Obsolete (2-digit year) date format defined by RFC 822 for http.
         case rfc822 = "EEE',' dd' 'MMM' 'yy HH':'mm':'ss z"
         /// Obsolete (2-digit year) date format defined by RFC 850 for usenet.
@@ -562,7 +562,7 @@ public extension Date {
     private static let utcTimezone = TimeZone(identifier: "UTC")
     
     /// Checks date string against various RFC standards and returns `Date`.
-    public init?(rfcString: String) {
+    init?(rfcString: String) {
         let dateFor: DateFormatter = DateFormatter()
         dateFor.locale = Date.posixLocale
         
@@ -579,7 +579,7 @@ public extension Date {
     
     /// Formats date according to RFCs standard.
     /// - Note: local and timezone paramters should be nil for `.http` standard
-    internal func format(with standard: RFCStandards, locale: Locale? = nil, timeZone: TimeZone? = nil) -> String {
+    func format(with standard: RFCStandards, locale: Locale? = nil, timeZone: TimeZone? = nil) -> String {
         let fm = DateFormatter()
         fm.dateFormat = standard.rawValue
         fm.timeZone = timeZone ?? Date.utcTimezone

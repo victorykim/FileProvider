@@ -357,15 +357,15 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         return upload(path, request: request, stream: stream, size: Int64(data.count), operation: operation, completionHandler: completionHandler)
     }
     
-    internal func request(for operation: FileOperationType, overwrite: Bool = false, attributes: [URLResourceKey: Any] = [:]) -> URLRequest {
+    func request(for operation: FileOperationType, overwrite: Bool = false, attributes: [URLResourceKey: Any] = [:]) -> URLRequest {
         fatalError("HTTPFileProvider is an abstract class. Please implement \(#function) in subclass.")
     }
     
-    internal func serverError(with code: FileProviderHTTPErrorCode, path: String?, data: Data?) -> FileProviderHTTPError {
+    func serverError(with code: FileProviderHTTPErrorCode, path: String?, data: Data?) -> FileProviderHTTPError {
         fatalError("HTTPFileProvider is an abstract class. Please implement \(#function) in subclass.")
     }
     
-    internal func multiStatusError(operation: FileOperationType, data: Data) -> FileProviderHTTPError? {
+    func multiStatusError(operation: FileOperationType, data: Data) -> FileProviderHTTPError? {
         // WebDAV will override this function
         return nil
     }
@@ -379,7 +379,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
      In case you have to call super method asyncronously, create a `Progress` object and pass ot to `progress` parameter.
     */
     @discardableResult
-    internal func doOperation(_ operation: FileOperationType, overwrite: Bool = false, progress: Progress? = nil,
+    func doOperation(_ operation: FileOperationType, overwrite: Bool = false, progress: Progress? = nil,
                               completionHandler: SimpleCompletionHandler) -> Progress? {
         guard fileOperationDelegate?.fileProvider(self, shouldDoOperation: operation) ?? true == true else {
             return nil
@@ -454,7 +454,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         - contents: all files parsed via `pageHandler` will be return aggregated.
         - error: `Error` returned by server. `nil` means success. If exists, it means `contents` are incomplete.
     */
-    internal func paginated(_ path: String, requestHandler: @escaping (_ token: String?) -> URLRequest?,
+    func paginated(_ path: String, requestHandler: @escaping (_ token: String?) -> URLRequest?,
                             pageHandler: @escaping (_ data: Data?, _ progress: Progress) -> (files: [FileObject], error: Error?, newToken: String?),
                             completionHandler: @escaping (_ contents: [FileObject], _ error: Error?) -> Void) -> Progress {
         let progress = Progress(totalUnitCount: -1)
@@ -586,7 +586,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         return progress
     }
     
-    internal func download(path: String, request: URLRequest, operation: FileOperationType,
+    func download(path: String, request: URLRequest, operation: FileOperationType,
                            responseHandler: ((_ response: URLResponse) -> Void)? = nil,
                            stream: OutputStream,
                            completionHandler: @escaping (_ error: Error?) -> Void) -> Progress? {
@@ -635,7 +635,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         return progress
     }
     
-    internal func download_progressive(path: String, request: URLRequest, operation: FileOperationType,
+    func download_progressive(path: String, request: URLRequest, operation: FileOperationType,
                                        responseHandler: ((_ response: URLResponse) -> Void)? = nil,
                                        progressHandler: @escaping (_ data: Data) -> Void,
                                        completionHandler: @escaping (_ error: Error?) -> Void) -> Progress? {
@@ -674,7 +674,7 @@ open class HTTPFileProvider: NSObject, FileProviderBasicRemote, FileProviderOper
         return progress
     }
     
-    internal func download_file(path: String, request: URLRequest, operation: FileOperationType,
+    func download_file(path: String, request: URLRequest, operation: FileOperationType,
                                   completionHandler: @escaping ((_ tempURL: URL?, _ error: Error?) -> Void)) -> Progress? {
         let progress = Progress(totalUnitCount: -1)
         progress.setUserInfoObject(operation, forKey: .fileProvderOperationTypeKey)

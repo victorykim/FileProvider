@@ -206,7 +206,7 @@ extension FileProviderBasic {
 }
 
 /// Checking equality of two file provider, regardless of current path queues and delegates.
-public func ==(lhs: FileProviderBasic, rhs: FileProviderBasic) -> Bool {
+func ==(lhs: FileProviderBasic, rhs: FileProviderBasic) -> Bool {
     if lhs === rhs { return true }
     if type(of: lhs) != type(of: rhs) {
         return false
@@ -427,23 +427,23 @@ public protocol FileProviderOperations: FileProviderBasic {
 
 public extension FileProviderOperations {
     @discardableResult
-    public func moveItem(path: String, to: String, completionHandler: SimpleCompletionHandler) -> Progress? {
+    func moveItem(path: String, to: String, completionHandler: SimpleCompletionHandler) -> Progress? {
         return self.moveItem(path: path, to: to, overwrite: false, completionHandler: completionHandler)
     }
     
     @discardableResult
-    public func copyItem(localFile: URL, to: String, completionHandler: SimpleCompletionHandler) -> Progress? {
+    func copyItem(localFile: URL, to: String, completionHandler: SimpleCompletionHandler) -> Progress? {
         return self.copyItem(localFile: localFile, to: to, overwrite: false, completionHandler: completionHandler)
     }
     
     @discardableResult
-    public func copyItem(path: String, to: String, completionHandler: SimpleCompletionHandler) -> Progress? {
+    func copyItem(path: String, to: String, completionHandler: SimpleCompletionHandler) -> Progress? {
         return self.copyItem(path: path, to: to, overwrite: false, completionHandler: completionHandler)
     }
 }
 
 internal extension FileProviderOperations {
-    internal func delegateNotify(_ operation: FileOperationType, error: Error? = nil) {
+    func delegateNotify(_ operation: FileOperationType, error: Error? = nil) {
         DispatchQueue.main.async(execute: {
             if let error = error {
                 self.delegate?.fileproviderFailed(self, operation: operation, error: error)
@@ -453,7 +453,7 @@ internal extension FileProviderOperations {
         })
     }
     
-    internal func delegateNotify(_ operation: FileOperationType, progress: Double) {
+    func delegateNotify(_ operation: FileOperationType, progress: Double) {
         DispatchQueue.main.async(execute: {
             self.delegate?.fileproviderProgress(self, operation: operation, progress: Float(progress))
         })
@@ -627,12 +627,12 @@ public protocol FileProviderReadWriteProgressive {
 
 public extension FileProviderReadWriteProgressive {
     @discardableResult
-    public func contents(path: String, progressHandler: @escaping (_ position: Int64, _ data: Data) -> Void, completionHandler: SimpleCompletionHandler) -> Progress? {
+    func contents(path: String, progressHandler: @escaping (_ position: Int64, _ data: Data) -> Void, completionHandler: SimpleCompletionHandler) -> Progress? {
         return contents(path: path, offset: 0, length: -1, responseHandler: nil, progressHandler: progressHandler, completionHandler: completionHandler)
     }
     
     @discardableResult
-    public func contents(path: String, responseHandler: ((_ response: URLResponse) -> Void)?, progressHandler: @escaping (_ position: Int64, _ data: Data) -> Void, completionHandler: SimpleCompletionHandler) -> Progress? {
+    func contents(path: String, responseHandler: ((_ response: URLResponse) -> Void)?, progressHandler: @escaping (_ position: Int64, _ data: Data) -> Void, completionHandler: SimpleCompletionHandler) -> Progress? {
         return contents(path: path, offset: 0, length: -1, responseHandler: responseHandler, progressHandler: progressHandler, completionHandler: completionHandler)
     }
 }
@@ -687,11 +687,11 @@ public protocol FileProvideUndoable: FileProviderOperations {
 }
 
 public extension FileProvideUndoable {
-    public func canUndo(operation: FileOperationType) -> Bool {
+    func canUndo(operation: FileOperationType) -> Bool {
         return undoOperation(for: operation) != nil
     }
     
-    public func canUndo(handle: Progress) -> Bool {
+    func canUndo(handle: Progress) -> Bool {
         if let operationType = handle.userInfo[.fileProvderOperationTypeKey] as? FileOperationType {
             return canUndo(operation: operationType)
         }
@@ -699,7 +699,7 @@ public extension FileProvideUndoable {
     }
     
     /// Reuturns roll back operation for provided `operation`.
-    internal func undoOperation(for operation: FileOperationType) -> FileOperationType? {
+    func undoOperation(for operation: FileOperationType) -> FileOperationType? {
         switch operation {
         case .create(path: let path):
             return .remove(path: path)
@@ -719,13 +719,13 @@ public extension FileProvideUndoable {
     }
     
     /// Initiates `self.undoManager` if equals with `nil`, and set `levelsOfUndo` to 10.
-    public func setupUndoManager() {
+    func setupUndoManager() {
         guard self.undoManager == nil else { return }
         self.undoManager = UndoManager()
         self.undoManager?.levelsOfUndo = 10
     }
     
-    public func _registerUndo(_ operation: FileOperationType) {
+    func _registerUndo(_ operation: FileOperationType) {
         #if os(macOS) || os(iOS) || os(tvOS)
         guard let undoManager = self.undoManager, let undoOp = self.undoOperation(for: operation) else {
             return
@@ -751,7 +751,7 @@ class UndoBox: NSObject {
         self.undoOperation = undoOperation
     }
     
-    @objc internal func doSimpleOperation(_ box: UndoBox) {
+    @objc func doSimpleOperation(_ box: UndoBox) {
         switch self.undoOperation {
         case .move(source: let source, destination: let dest):
             _=provider?.moveItem(path: source, to: dest, completionHandler: nil)
@@ -812,7 +812,7 @@ public protocol FileProvider: FileProviderOperations, FileProviderReadWrite, NSC
 
 internal let pathTrimSet = CharacterSet(charactersIn: " /")
 public extension FileProviderBasic {
-    public var type: String {
+    var type: String {
         #if swift(>=3.1)
         return Swift.type(of: self).type
         #else
@@ -820,7 +820,7 @@ public extension FileProviderBasic {
         #endif
     }
     
-    public func url(of path: String) -> URL {
+    func url(of path: String) -> URL {
         var rpath: String = path
         rpath = rpath.addingPercentEncoding(withAllowedCharacters: .filePathAllowed) ?? rpath
         if let baseURL = baseURL?.absoluteURL {
@@ -833,7 +833,7 @@ public extension FileProviderBasic {
         }
     }
     
-    public func relativePathOf(url: URL) -> String {
+    func relativePathOf(url: URL) -> String {
         // check if url derieved from current base url
         let relativePath = url.relativePath
         if !relativePath.isEmpty, url.baseURL == self.baseURL {
@@ -853,7 +853,7 @@ public extension FileProviderBasic {
     /// Returns a file name supposed to be unique with adding numbers to end of file.
     /// - Important: It's a synchronous method. Don't use it on main thread.
     /// - Parameter filePath: supposed path of file which should be examined.
-    public func fileByUniqueName(_ filePath: String) -> String {
+    func fileByUniqueName(_ filePath: String) -> String {
         //assert(!Thread.isMainThread, "\(#function) is not recommended to be executed on Main Thread.")
         let fileUrl = URL(fileURLWithPath: filePath)
         let dirPath = fileUrl.deletingLastPathComponent().path 
@@ -890,7 +890,7 @@ public extension FileProviderBasic {
         return dirPath.appendingPathComponent(finalFile)
     }
     
-    internal func NotImplemented(_ fn: String = #function, file: StaticString = #file) {
+    func NotImplemented(_ fn: String = #function, file: StaticString = #file) {
         assert(false, "\(fn) method is not yet implemented. \(file)")
     }
 }

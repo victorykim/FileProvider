@@ -732,8 +732,8 @@ public class FileProviderStreamTask: URLSessionTask, StreamDelegate {
     func addTrustAllCertificatesSettings() {
         // Define custom SSL/TLS settings
         let sslSettings: [NSString: Any] = [
-            NSString(format: kCFStreamSSLValidatesCertificateChain): kCFBooleanFalse,
-            NSString(format: kCFStreamSSLPeerName): kCFNull
+            NSString(format: kCFStreamSSLValidatesCertificateChain): kCFBooleanFalse as Any,
+            NSString(format: kCFStreamSSLPeerName): kCFNull as Any
         ]
         // Set custom SSL/TLS settings
         inputStream?.setProperty(sslSettings, forKey: kCFStreamPropertySSLSettings as Stream.PropertyKey)
@@ -760,7 +760,7 @@ extension Stream {
      *   - peerID: On return, points to a buffer containing the peer ID data.
      *   - peerIDLen: On return, the length of the peer ID data buffer.
      */
-    public func getSSLPeerID() -> (peerID: UnsafeRawPointer?, peerIDLen: Int) {
+    func getSSLPeerID() -> (peerID: UnsafeRawPointer?, peerIDLen: Int) {
         var peerID: UnsafeRawPointer? = nil
         var peerIDLen: Int = 0
         

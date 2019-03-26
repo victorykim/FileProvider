@@ -158,7 +158,7 @@ public final class LocalFileMonitor {
     }
     
     /// Starts sending notifications if currently stopped
-    public func start() {
+    func start() {
         if !state {
             state = true
             source.resume()
@@ -166,7 +166,7 @@ public final class LocalFileMonitor {
     }
     
     /// Stops sending notifications if currently enabled
-    public func stop() {
+    func stop() {
         if state {
             state = false
             source.suspend()

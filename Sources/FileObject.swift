@@ -196,7 +196,7 @@ extension FileObject {
 }
 
 extension FileObject {
-    internal func mapPredicate() -> [String: Any] {
+    func mapPredicate() -> [String: Any] {
         let mapDict: [URLResourceKey: String] = [.fileURLKey: "url", .nameKey: "name", .pathKey: "path",
                                                  .fileSizeKey: "fileSize", .creationDateKey: "creationDate",
                                                  .contentModificationDateKey: "modifiedDate", .isHiddenKey: "isHidden",
@@ -221,7 +221,7 @@ extension FileObject {
     }
     
     /// Converts macOS spotlight query for searching files to a query that can be used for `searchFiles()` method
-    static public func convertPredicate(fromSpotlight query: NSPredicate) -> NSPredicate {
+    static func convertPredicate(fromSpotlight query: NSPredicate) -> NSPredicate {
         let mapDict: [String: URLResourceKey] = [NSMetadataItemURLKey: .fileURLKey, NSMetadataItemFSNameKey: .nameKey,
                                                  NSMetadataItemPathKey: .pathKey, NSMetadataItemFSSizeKey: .fileSizeKey,
                                                  NSMetadataItemFSCreationDateKey: .creationDateKey, NSMetadataItemFSContentChangeDateKey: .contentModificationDateKey,
@@ -234,6 +234,8 @@ extension FileObject {
             case .and: return NSCompoundPredicate(andPredicateWithSubpredicates: newSub)
             case .not: return NSCompoundPredicate(notPredicateWithSubpredicate: newSub[0])
             case .or:  return NSCompoundPredicate(orPredicateWithSubpredicates: newSub)
+            @unknown default:
+                fatalError()
             }
         } else if let cQuery = query as? NSComparisonPredicate {
             var newLeft = cQuery.leftExpression
@@ -407,7 +409,7 @@ public struct FileObjectSorting {
     }
     
     /// Sorts array of `FileObject`s by criterias set in attributes.
-    public func sort(_ files: [FileObject]) -> [FileObject] {
+    func sort(_ files: [FileObject]) -> [FileObject] {
         return files.sorted {
             if isDirectoriesFirst {
                 if ($0.isDirectory) && !($1.isDirectory) {

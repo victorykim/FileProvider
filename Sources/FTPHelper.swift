@@ -1203,7 +1203,7 @@ public struct FileProviderFTPError: LocalizedError {
     init(message response: String, path: String) {
         let message = response.components(separatedBy: .newlines).last ?? "No Response"
         #if swift(>=4.0)
-        let startIndex = (message.index(of: "-") ?? message.index(of: " ")) ?? message.startIndex
+        let startIndex = (message.firstIndex(of: "-") ?? message.firstIndex(of: " ")) ?? message.startIndex
         self.code = Int(message[..<startIndex].trimmingCharacters(in: .whitespacesAndNewlines)) ?? -1
         #else
         let startIndex = (message.characters.index(of: "-") ?? message.characters.index(of: " ")) ?? message.startIndex

@@ -36,14 +36,14 @@ internal var downloadCompletionHandlersForTasks = [String: [Int: (URL) -> Void]]
 internal var dataCompletionHandlersForTasks = [String: [Int: (Data) -> Void]]()
 internal var responseCompletionHandlersForTasks = [String: [Int: (URLResponse) -> Void]]()
 
-internal func initEmptySessionHandler(_ uuid: String) {
+func initEmptySessionHandler(_ uuid: String) {
     completionHandlersForTasks[uuid] = [:]
     downloadCompletionHandlersForTasks[uuid] = [:]
     dataCompletionHandlersForTasks[uuid] = [:]
     responseCompletionHandlersForTasks[uuid] = [:]
 }
 
-internal func removeSessionHandler(for uuid: String) {
+func removeSessionHandler(for uuid: String) {
     _ = completionHandlersForTasks.removeValue(forKey: uuid)
     _ = downloadCompletionHandlersForTasks.removeValue(forKey: uuid)
     _ = dataCompletionHandlersForTasks.removeValue(forKey: uuid)
@@ -69,7 +69,7 @@ final public class SessionDelegate: NSObject, URLSessionDataDelegate, URLSession
     private let observeProgressesLock = NSLock()
     private var observeProgresses = [(task: URLSessionTask, progress: Progress, kind: ObserveKind)]()
     
-    public func observerProgress(of task: URLSessionTask, using: Progress, kind: ObserveKind) {
+    func observerProgress(of task: URLSessionTask, using: Progress, kind: ObserveKind) {
         switch kind {
         case .upload:
             task.addObserver(self, forKeyPath: #keyPath(URLSessionTask.countOfBytesSent), options: .new, context: nil)

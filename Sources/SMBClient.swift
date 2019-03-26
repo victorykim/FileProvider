@@ -169,7 +169,7 @@ class SMBClient: NSObject, StreamDelegate {
 
 // MARK: create and analyse messages
 extension SMBClient {
-    internal func sendMessage(_ message: SMBRequestBody, toTree treeId: UInt32, completionHandler: SimpleCompletionHandler) -> UInt64 {
+    func sendMessage(_ message: SMBRequestBody, toTree treeId: UInt32, completionHandler: SimpleCompletionHandler) -> UInt64 {
         let mId = createMessageId()
         let credit = consumeCredit()
         let smbHeader = SMB2.Header(command: message.command, creditRequestResponse: credit, messageId: mId, treeId: treeId, sessionId: sessionId)

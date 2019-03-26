@@ -323,11 +323,13 @@ final class HMAC<Variant: SHA2Variant> {
     }
     
     static func authenticate(message: Data, withKey key: Data) -> Data {
-        return Data(bytes: authenticate(message: Array(message), withKey: Array(key)))
+        let kValue = authenticate(message: Array(message), withKey: Array(key))
+        return Data(bytes: kValue, count: kValue.count)
     }
     
     static func authenticate(message: String, withKey key: Data) -> Data {
-        return Data(bytes: authenticate(message: [UInt8](message.utf8), withKey: Array(key)))
+        let kValue = authenticate(message: [UInt8](message.utf8), withKey: Array(key))
+        return Data(bytes: kValue, count: kValue.count)
     }
 }
 
@@ -420,29 +422,29 @@ fileprivate func arrayOfBytes<T>(_ value:T, length:Int? = nil) -> [UInt8] {
 }
 
 public extension String {
-    public func fp_sha256() -> [UInt8] {
+    func fp_sha256() -> [UInt8] {
         return SHA2<SHA256>.calculate([UInt8](self.utf8))
     }
     
-    public func fp_sha384() -> [UInt8] {
+    func fp_sha384() -> [UInt8] {
         return SHA2<SHA384>.calculate([UInt8](self.utf8))
     }
     
-    public func fp_sha512() -> [UInt8] {
+    func fp_sha512() -> [UInt8] {
         return SHA2<SHA512>.calculate([UInt8](self.utf8))
     }
 }
 
 public extension Data {
-    public func fp_sha256() -> [UInt8] {
+    func fp_sha256() -> [UInt8] {
         return SHA2<SHA256>.calculate(Array(self))
     }
     
-    public func fp_sha384() -> [UInt8] {
+    func fp_sha384() -> [UInt8] {
         return SHA2<SHA384>.calculate(Array(self))
     }
     
-    public func fp_sha512() -> [UInt8] {
+    func fp_sha512() -> [UInt8] {
         return SHA2<SHA512>.calculate(Array(self))
     }
 }
